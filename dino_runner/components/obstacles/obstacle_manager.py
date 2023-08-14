@@ -16,9 +16,9 @@ class ObstacleManager:
         options = random.randint(0, 2)
         if len(self.obstacles) == 0:
           if options == 0:
-              self.obstacles.append(Cactus(SMALL_CACTUS , Y_POS_SMALL))
+              self.obstacles.append(Cactus(SMALL_CACTUS, Y_POS_SMALL))
           elif options == 1:
-              self.obstacles.append(Cactus(LARGE_CACTUS , Y_POS_LARGE))
+              self.obstacles.append(Cactus(LARGE_CACTUS, Y_POS_LARGE))
           elif options == 2:
               self.obstacles.append(Bird(BIRD))
             
