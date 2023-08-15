@@ -6,6 +6,7 @@ from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 
 FONT_STYLE = "freesansbold.ttf"
 TEXT_COLOR_BLACK = (0, 0, 0)
+TEXT_COLOR_ORANGE = ("#F18F01")
 
 
 class Game:
@@ -35,6 +36,8 @@ class Game:
 
     def run(self):
         self.playing = True
+        self.score = 0
+        self.game_speed = 20
         self.obstacle_manager.reset_obstacles()
         while self.playing:
             self.events()
@@ -78,32 +81,33 @@ class Game:
             self.x_pos_bg = 0
         self.x_pos_bg -= self.game_speed
     
-    def draw_score(self):
+    def format_text(self, text_render, color_text, width_rect, height_rect ): 
         font = pygame.font.Font(FONT_STYLE, 22)
-        text = font.render(f"Score: {self.score}", True, TEXT_COLOR_BLACK)
+        text = font.render(text_render, True, color_text)
         text_rect = text.get_rect()
-        text_rect.center = (100, 50)
+        text_rect.center = ( width_rect, height_rect)
         self.screen.blit(text, text_rect)
+
+    def draw_score(self):
+        self.format_text(f" Score: {self.score}", TEXT_COLOR_ORANGE, 1000, 50)
 
     def show_menu(self):
         self.screen.fill((225,255,255))
         half_screen_height = SCREEN_HEIGHT // 2
         half_screen_width = SCREEN_WIDTH // 2 
 
-        if self.death_count == 0: 
-            font = pygame.font.Font(FONT_STYLE, 22)
-            text = font.render("Press any key to start", True, TEXT_COLOR_BLACK)
-            text_rect = text.get_rect()
-            text_rect.center = (half_screen_width, half_screen_height)
-            self.screen.blit(text, text_rect)
-        else:
-            self.screen.blit(ICON, (half_screen_width - 20, half_screen_height - 140))
-
-
+        if self.death_count == 0:   # Tela de inicio
+            self.format_text("Press any key to start", TEXT_COLOR_BLACK , half_screen_width, half_screen_height)
+        else: # Tela de restart
+            self.screen.blit(ICON, (half_screen_width - 40, half_screen_height - 140))
+            self.format_text("Press any key to start", TEXT_COLOR_BLACK , half_screen_width, half_screen_height)
+            self.format_text(f"Score: {self.score}", TEXT_COLOR_BLACK , half_screen_width , half_screen_height + 40)
+            self.format_text(f"Death Count: {self.death_count}", TEXT_COLOR_BLACK , half_screen_width , half_screen_height + 80)
+            
         pygame.display.update()
-        self.handle_event_on_menu()
+        self.handle_events_on_menu()
 
-    def handle_event_on_menu(self):
+    def handle_events_on_menu(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.playing = False
