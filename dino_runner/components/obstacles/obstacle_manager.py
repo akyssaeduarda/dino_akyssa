@@ -3,26 +3,21 @@ import random
 
 from dino_runner.components.obstacles.cactus import Cactus
 from dino_runner.components.obstacles.bird import Bird
-from dino_runner.utils.constants import SMALL_CACTUS, LARGE_CACTUS, BIRD
 
-Y_POS_SMALL = 325
-Y_POS_LARGE = 300
 
 class ObstacleManager:
     def __init__(self):
         self.obstacles = []
 
     def update(self, game): 
-        options = random.randint(0, 2)
-        if len(self.obstacles) == 0:
-          if options == 0:
-              self.obstacles.append(Cactus(SMALL_CACTUS, Y_POS_SMALL))
-          elif options == 1:
-              self.obstacles.append(Cactus(LARGE_CACTUS, Y_POS_LARGE))
-          elif options == 2:
-              self.obstacles.append(Bird(BIRD))
-            
+        obstacle_type = [
+            Cactus(),
+            Bird(),
+        ]
         
+        if len(self.obstacles) == 0:
+              self.obstacles.append(obstacle_type[random.randint(0, 1)])
+            
         for obstacle in self.obstacles:
             obstacle.update(game.game_speed, self.obstacles)
             if game.player.dino_rect.colliderect(obstacle.rect):
