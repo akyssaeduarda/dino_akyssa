@@ -28,6 +28,7 @@ class ObstacleManager:
                     break
                 else:
                     self.obstacles.remove(obstacle)
+                
             
     def draw(self, screen):
         for obstacle in self.obstacles:

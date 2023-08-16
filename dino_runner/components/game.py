@@ -5,8 +5,7 @@ from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.components.power_ups.power_up_manager import PowerUpManager
 from dino_runner.utils.text_utils import draw_message_component
-
-TEXT_COLOR_ORANGE = ("#F18F01")
+from dino_runner.utils.text_utils import TEXT_COLOR_DARK_GREY, TEXT_COLOR_LIGHT_GRAY, TEXT_COLOR_RED
 
 
 class Game:
@@ -20,6 +19,7 @@ class Game:
         self.running = False
         self.game_speed = 20
         self.score = 0
+        self.best_score = 0
         self.death_count = 0
         self.x_pos_bg = 0
         self.y_pos_bg = 380
@@ -64,6 +64,9 @@ class Game:
         self.score += 1
         if self.score % 100 == 0:
             self.game_speed += 5
+        
+        if self.score > self.best_score:
+            self.best_score = self.score
 
     def draw(self):
         self.clock.tick(FPS)
@@ -92,7 +95,14 @@ class Game:
             self.screen,
             pos_x_center = 1000,
             pos_y_center = 50,
-            font_color= TEXT_COLOR_ORANGE,
+            font_color= TEXT_COLOR_DARK_GREY,
+        )
+        draw_message_component(
+            f" Best Score: {self.best_score}",
+            self.screen,
+            pos_x_center = 850,
+            pos_y_center = 50,
+            font_color= TEXT_COLOR_LIGHT_GRAY,
         )
 
     def draw_power_up_time(self):
@@ -131,11 +141,20 @@ class Game:
                 f"Score: {self.score}",
                 self.screen,
                 pos_y_center=half_screen_height + 40,
+                font_color= TEXT_COLOR_DARK_GREY,
+            )
+            draw_message_component(
+                f" Best Score: {self.best_score}",
+                self.screen,
+                pos_y_center = half_screen_height + 70,
+                font_color= TEXT_COLOR_LIGHT_GRAY,
             )
             draw_message_component(
                 f"Death Count: {self.death_count}",
                 self.screen,
-                pos_y_center= half_screen_height + 80
+                pos_y_center = half_screen_height + 100,
+                font_color = TEXT_COLOR_RED
+
             )
             
         pygame.display.update()

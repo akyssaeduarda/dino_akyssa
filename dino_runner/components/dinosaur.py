@@ -5,10 +5,14 @@ from dino_runner.utils.constants import (
     JUMPING,
     DUCKING, 
     RUNNING_SHIELD,
+    RUNNING_HAMMER,
     JUMPING_SHIELD,
+    JUMPING_HAMMER,
     DUCKING_SHIELD,
+    DUCKING_HAMMER,
     DEFAULT_TYPE,
     SHIELD_TYPE,
+    HAMMER_TYPE,
 )
 
 
@@ -20,16 +24,18 @@ JUMP_VEL = 8.5
 RUN_IMG = {
     DEFAULT_TYPE: RUNNING,
     SHIELD_TYPE: RUNNING_SHIELD,
+    HAMMER_TYPE: RUNNING_HAMMER,
 }
 JUMP_IMG = {
     DEFAULT_TYPE: JUMPING,
-    SHIELD_TYPE: JUMPING_SHIELD,   
+    SHIELD_TYPE: JUMPING_SHIELD,
+    HAMMER_TYPE: JUMPING_HAMMER,   
 }
 DUCK_IMG = {
     DEFAULT_TYPE: DUCKING,
     SHIELD_TYPE: DUCKING_SHIELD,
+    HAMMER_TYPE: DUCKING_HAMMER,
 }
-
 
 
 class Dinosaur(Sprite): 
@@ -49,6 +55,7 @@ class Dinosaur(Sprite):
     def setup_state(self):
         self.has_power_up = False
         self.shield = False
+        self.hammer = False
         self.show_test = False
         self.power_up_time = 0
     
