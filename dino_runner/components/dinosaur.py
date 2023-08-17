@@ -6,15 +6,19 @@ from dino_runner.utils.constants import (
     DUCKING, 
     RUNNING_SHIELD,
     RUNNING_HAMMER,
+    RUNNING_SERRA,
     JUMPING_SHIELD,
     JUMPING_HAMMER,
+    JUMPING_SERRA,
     DUCKING_SHIELD,
     DUCKING_HAMMER,
+    DUCKING_SERRA,
     DEFAULT_TYPE,
     SHIELD_TYPE,
     HAMMER_TYPE,
+    SERRA_TYPE,
+    JUMPING_MUSIC
 )
-
 
 X_POS = 80 
 Y_POS = 310
@@ -25,16 +29,19 @@ RUN_IMG = {
     DEFAULT_TYPE: RUNNING,
     SHIELD_TYPE: RUNNING_SHIELD,
     HAMMER_TYPE: RUNNING_HAMMER,
+    SERRA_TYPE: RUNNING_SERRA,
 }
 JUMP_IMG = {
     DEFAULT_TYPE: JUMPING,
     SHIELD_TYPE: JUMPING_SHIELD,
     HAMMER_TYPE: JUMPING_HAMMER,   
+    SERRA_TYPE: JUMPING_SERRA,
 }
 DUCK_IMG = {
     DEFAULT_TYPE: DUCKING,
     SHIELD_TYPE: DUCKING_SHIELD,
     HAMMER_TYPE: DUCKING_HAMMER,
+    SERRA_TYPE: DUCKING_SERRA
 }
 
 
@@ -54,8 +61,6 @@ class Dinosaur(Sprite):
     
     def setup_state(self):
         self.has_power_up = False
-        self.shield = False
-        self.hammer = False
         self.show_test = False
         self.power_up_time = 0
     
@@ -68,6 +73,7 @@ class Dinosaur(Sprite):
             self.jump()
         
         if user_input[pygame.K_UP] and not self.dino_jump:
+            JUMPING_MUSIC.play()
             self.dino_jump = True
             self.dino_run = False
             self.dino_duck = False

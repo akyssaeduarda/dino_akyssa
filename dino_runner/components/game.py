@@ -1,11 +1,11 @@
 import pygame
 
-from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
+from dino_runner.utils.constants import BG, ICON,GAME_OVER, DINO_START, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
+from dino_runner.utils.constants import TEXT_COLOR_DARK_GREY, TEXT_COLOR_LIGHT_GRAY, TEXT_COLOR_RED, TEXT_COLOR_GREEN 
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.components.power_ups.power_up_manager import PowerUpManager
 from dino_runner.utils.text_utils import draw_message_component
-from dino_runner.utils.text_utils import TEXT_COLOR_DARK_GREY, TEXT_COLOR_LIGHT_GRAY, TEXT_COLOR_RED
 
 
 class Game:
@@ -36,9 +36,12 @@ class Game:
         pygame.quit()
 
     def run(self):
+        pygame.mixer.music.play(-1)
         self.playing = True
         self.score = 0
         self.game_speed = 20
+        self.player.type = 'default'
+        self.player.has_power_up = False
         self.obstacle_manager.reset_obstacles()
         self.power_up_manager.resert_power_ups()
         while self.playing:
@@ -60,10 +63,9 @@ class Game:
         self.update_score()
     
     def update_score(self):
-        #modificar para adicionar eventos com base no score
         self.score += 1
         if self.score % 100 == 0:
-            self.game_speed += 5
+            self.game_speed += 3
         
         if self.score > self.best_score:
             self.best_score = self.score
@@ -113,13 +115,12 @@ class Game:
                     f"{self.player.type.capitalize()} enable for {time_to_show} seconds",
                     self.screen,
                     font_size=18,
-                    pos_x_center=500,
-                    pos_y_center=40
+                    pos_x_center=550,
+                    pos_y_center=50
                 )
             else:
                 self.player.has_power_up = False
                 self.player.type = DEFAULT_TYPE
-
 
     def show_menu(self):
         self.screen.fill((255,255,255))
@@ -127,32 +128,39 @@ class Game:
         half_screen_width = SCREEN_WIDTH // 2 
 
         if self.death_count == 0:   # Tela de inicio
+            self.screen.blit(DINO_START, (half_screen_width - 40, half_screen_height - 140))
             draw_message_component(
             "Press any key to start",
             self.screen,
+            font_color = TEXT_COLOR_DARK_GREY,
         )
         else: # Tela de restart
-            self.screen.blit(ICON, (half_screen_width - 40, half_screen_height - 140))
+            self.screen.blit(GAME_OVER, (half_screen_width - 180, half_screen_height - 140))
+
             draw_message_component(
                 "Press any key to start", 
                 self.screen,
+                pos_y_center=half_screen_height - 50,
+                font_size = 27,
+                font_color = TEXT_COLOR_DARK_GREY,
+
             )
             draw_message_component(
                 f"Score: {self.score}",
                 self.screen,
-                pos_y_center=half_screen_height + 40,
+                pos_y_center=half_screen_height + 10,
                 font_color= TEXT_COLOR_DARK_GREY,
             )
             draw_message_component(
                 f" Best Score: {self.best_score}",
                 self.screen,
-                pos_y_center = half_screen_height + 70,
-                font_color= TEXT_COLOR_LIGHT_GRAY,
+                pos_y_center = half_screen_height + 50,
+                font_color= TEXT_COLOR_GREEN,
             )
             draw_message_component(
                 f"Death Count: {self.death_count}",
                 self.screen,
-                pos_y_center = half_screen_height + 100,
+                pos_y_center = half_screen_height + 90,
                 font_color = TEXT_COLOR_RED
 
             )
