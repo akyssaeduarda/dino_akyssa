@@ -26,25 +26,10 @@ class ObstacleManager:
             if game.player.dino_rect.colliderect(obstacle.rect):     
                 if game.player.type == 'shield' and isinstance(obstacle, Bird):
                     self.obstacles.remove(obstacle) 
-                    if isinstance(obstacle, Cactus) or isinstance(obstacle, Rocha):
-                        pygame.time.delay(500)
-                        game.playing = False
-                        game.death_count += 1
-                        break
                 elif game.player.type == 'hammer' and isinstance(obstacle, Rocha):
                     self.obstacles.remove(obstacle) 
-                    if isinstance(obstacle, Bird) or isinstance(obstacle, Cactus):
-                        pygame.time.delay(500)
-                        game.playing = False
-                        game.death_count += 1
-                        break
                 elif game.player.type == 'serra' and isinstance(obstacle, Cactus):
                     self.obstacles.remove(obstacle) 
-                    if isinstance(obstacle, Bird) or isinstance(obstacle, Rocha):
-                        pygame.time.delay(500)
-                        game.playing = False
-                        game.death_count += 1
-                        break
                 else:
                     pygame.time.delay(500)
                     game.playing = False
