@@ -1,7 +1,6 @@
 import pygame
 
-from dino_runner.utils.constants import BG, ICON,GAME_OVER, DINO_START, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
-from dino_runner.utils.constants import TEXT_COLOR_DARK_GREY, TEXT_COLOR_LIGHT_GRAY, TEXT_COLOR_RED, TEXT_COLOR_GREEN 
+from dino_runner.utils.constants import BG, ICON, GAME_OVER, DINO_START, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE,TEXT_COLOR_LIGHT_GRAY, GAME_OVER_MUSIC
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.components.power_ups.power_up_manager import PowerUpManager
@@ -36,11 +35,12 @@ class Game:
         pygame.quit()
 
     def run(self):
+        GAME_OVER_MUSIC.stop()
         pygame.mixer.music.play(-1)
         self.playing = True
         self.score = 0
         self.game_speed = 20
-        self.player.type = 'default'
+        self.player.type = DEFAULT_TYPE
         self.player.has_power_up = False
         self.obstacle_manager.reset_obstacles()
         self.power_up_manager.resert_power_ups()
@@ -93,18 +93,19 @@ class Game:
 
     def draw_score(self):
         draw_message_component(
-            f" Score: {self.score}",
+            f" HI:{self.best_score:05}",
+            self.screen,
+            pos_x_center = 870,
+            pos_y_center = 50,
+            font_size = 15,
+            font_color= TEXT_COLOR_LIGHT_GRAY,
+        )
+        draw_message_component(
+            f"{self.score:05}",
             self.screen,
             pos_x_center = 1000,
             pos_y_center = 50,
-            font_color= TEXT_COLOR_DARK_GREY,
-        )
-        draw_message_component(
-            f" Best Score: {self.best_score}",
-            self.screen,
-            pos_x_center = 850,
-            pos_y_center = 50,
-            font_color= TEXT_COLOR_LIGHT_GRAY,
+            font_size = 15,
         )
 
     def draw_power_up_time(self):
@@ -114,54 +115,64 @@ class Game:
                 draw_message_component(
                     f"{self.player.type.capitalize()} enable for {time_to_show} seconds",
                     self.screen,
-                    font_size=18,
-                    pos_x_center=550,
-                    pos_y_center=50
+                    font_size = 18,
+                    pos_x_center = 550,
+                    pos_y_center = 90,
                 )
             else:
                 self.player.has_power_up = False
                 self.player.type = DEFAULT_TYPE
 
     def show_menu(self):
-        self.screen.fill((255,255,255))
+        
         half_screen_height = SCREEN_HEIGHT // 2
         half_screen_width = SCREEN_WIDTH // 2 
 
         if self.death_count == 0:   # Tela de inicio
+            self.screen.fill((255,255,255))
             self.screen.blit(DINO_START, (half_screen_width - 40, half_screen_height - 140))
+            
             draw_message_component(
-            "Press any key to start",
-            self.screen,
-            font_color = TEXT_COLOR_DARK_GREY,
-        )
+                "Press space to start",
+                self.screen,
+            )
+            draw_message_component(
+                "Hammer removes stone | Shield removes bird | Saw removes cactus",
+                self.screen,
+                pos_y_center = half_screen_height + 60,
+                font_size = 15,
+            )
         else: # Tela de restart
-            self.screen.blit(GAME_OVER, (half_screen_width - 180, half_screen_height - 140))
-
+            self.screen.blit(GAME_OVER, (half_screen_width - 192, half_screen_height - 140))
+            
             draw_message_component(
-                "Press any key to start", 
+                "Press space to start", 
                 self.screen,
                 pos_y_center=half_screen_height - 50,
-                font_size = 27,
-                font_color = TEXT_COLOR_DARK_GREY,
+                font_color = "#313131"
 
             )
-            draw_message_component(
-                f"Score: {self.score}",
-                self.screen,
-                pos_y_center=half_screen_height + 10,
-                font_color= TEXT_COLOR_DARK_GREY,
-            )
-            draw_message_component(
-                f" Best Score: {self.best_score}",
-                self.screen,
-                pos_y_center = half_screen_height + 50,
-                font_color= TEXT_COLOR_GREEN,
-            )
+            # draw_message_component(
+            #     f"Best Score:{self.best_score}",
+            #     self.screen,
+            #     pos_x_center = 930,
+            #     pos_y_center = 85,
+            #     font_size = 15,
+            #     font_color= TEXT_COLOR_LIGHT_GRAY,
+            # )
+            # draw_message_component(
+            #     f"Your Score:{self.score}",
+            #     self.screen,
+            #     pos_x_center = 930,
+            #     pos_y_center = 115,
+            #     font_size = 15,
+            # )
             draw_message_component(
                 f"Death Count: {self.death_count}",
                 self.screen,
-                pos_y_center = half_screen_height + 90,
-                font_color = TEXT_COLOR_RED
+                pos_y_center = half_screen_height + 20,
+                font_size = 15,
+                
 
             )
             
@@ -174,4 +185,5 @@ class Game:
                 self.playing = False
                 self.running = False
             elif event.type == pygame.KEYDOWN:
-                self.run()
+                if event.key == pygame.K_SPACE:
+                 self.run()
